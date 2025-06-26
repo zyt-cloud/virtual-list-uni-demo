@@ -42,5 +42,6 @@ onHide(() => {
 
 button {
   font-size: 14px;
+  word-break: break-all;
 }
 </style>

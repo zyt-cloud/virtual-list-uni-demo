@@ -1,8 +1,13 @@
-import type { Rect } from '@/components/vanilla'
 import { getCurrentInstance } from 'vue'
 
 export const virtualizerUUID = {
   value: 1,
+}
+
+export type Rect = {
+  width: number
+  height: number
+  top?: number
 }
 
 export function getRectSize(id: string, success?: (rect: Rect) => void, fail?: () => void, retryMs = 500) {
@@ -50,4 +55,17 @@ export async function getScrollViewContextNode(id: string) {
       .node(({ node }) => resolve(node))
       .exec()
   )
+}
+
+export function getWindowRect() {
+  try {
+    const info = uni.getWindowInfo()
+    if (!info.windowWidth) {
+      throw 'getWindowInfo error'
+    }
+    return { width: info.windowWidth, height: info.windowHeight }
+  } catch (error) {
+    const legcay = uni.getSystemInfoSync()
+    return { width: legcay.windowWidth, height: legcay.windowHeight }
+  }
 }

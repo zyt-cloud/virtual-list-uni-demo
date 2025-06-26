@@ -15,32 +15,31 @@ const onReady = (virtualizer: VirtualizerInstance) => {
 </script>
 
 <template>
-  <view>
-    <view class="demo-btns">
-      <button @click="instanceRef?.scrollToIndex(2000, { behavior: 'smooth' })">scrollToIndex(2000) with smooth</button>
+  <view style="padding: 10px 12px">
+    <view class="demo-btns" style="grid-template-columns: repeat(2, 1fr)">
       <button @click="instanceRef?.scrollToIndex(3000, { align: 'center' })">
         scrollToIndex(3000) with align center
       </button>
-      <button @click="instanceRef?.scrollToOffset(4000, 'smooth')">scrollToOffset(4000) with smooth</button>
+      <button @click="instanceRef?.scrollToOffset(4000, 'instant')">scrollToOffset(4000)</button>
     </view>
     <ZcloudVirtualList
       itemClassName="demo-list-item"
-      :height="400"
+      :height="600"
       :count="10000"
       :size="60"
       :overscan="6"
+      dynamic-size
       :gap="10"
       :lanes="2"
       @ready="onReady"
     >
-      <template #default="{ index, size }">
+      <template #default="{ index }">
         <view
           :style="{
             backgroundColor: randomColors[index % randomColors.length],
             height: `${dynamicSizes[index]}px`,
           }"
-          >item {{ index }}</view
-        >
+        />
       </template>
     </ZcloudVirtualList>
   </view>

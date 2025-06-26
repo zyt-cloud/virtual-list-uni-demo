@@ -3,10 +3,13 @@ import ZcloudVirtualList from '@/uni-modules/zcloud-virtual/components/zcloud-vi
 import { type VirtualizerInstance } from '@/uni-modules/zcloud-virtual/typings'
 import { ref } from 'vue'
 import { randomColors, randomSize } from '../dynamic/utils'
+import { onPageScroll } from '@dcloudio/uni-app'
 
 const instanceRef = ref<VirtualizerInstance>()
 
-const dynamicSizes = new Array(10000).fill(true).map(() => randomSize() + 80)
+onPageScroll((e) => {
+  instanceRef.value?.onScroll(e)
+})
 
 const onReady = (virtualizer: VirtualizerInstance) => {
   console.log('ready', virtualizer)
@@ -15,7 +18,7 @@ const onReady = (virtualizer: VirtualizerInstance) => {
 </script>
 
 <template>
-  <view>
+  <view style="padding: 10px 12px">
     <view class="demo-btns">
       <button @click="instanceRef?.scrollToIndex(2000, { behavior: 'smooth' })">scrollToIndex(2000) with smooth</button>
       <button @click="instanceRef?.scrollToIndex(3000, { align: 'center' })">
@@ -25,9 +28,9 @@ const onReady = (virtualizer: VirtualizerInstance) => {
     </view>
     <ZcloudVirtualList
       itemClassName="demo-list-item"
-      :height="400"
       :count="10000"
-      :size="60"
+      follow-page-scroll
+      :size="() => randomSize() + 30"
       :overscan="6"
       :gap="10"
       :lanes="2"
@@ -37,10 +40,9 @@ const onReady = (virtualizer: VirtualizerInstance) => {
         <view
           :style="{
             backgroundColor: randomColors[index % randomColors.length],
-            height: `${dynamicSizes[index]}px`,
+            height: `${size}px`,
           }"
-          >item {{ index }}</view
-        >
+        />
       </template>
     </ZcloudVirtualList>
   </view>

@@ -15,7 +15,7 @@ const onReady = (virtualizer: VirtualizerInstance) => {
 </script>
 
 <template>
-  <view>
+  <view style="padding: 10px 12px">
     <view class="demo-btns">
       <button @click="instanceRef?.scrollToIndex(2000, { behavior: 'smooth' })">scrollToIndex(2000) with smooth</button>
       <button @click="instanceRef?.scrollToIndex(3000, { align: 'center' })">

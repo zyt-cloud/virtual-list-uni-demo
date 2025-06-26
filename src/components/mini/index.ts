@@ -53,6 +53,10 @@ export class MiniVirtualizer extends BasicVirtualizer {
   }, 160)
 
   public onScroll(res: ScrollOption) {
+    if (!res) {
+      return
+    }
+
     this.scrollOffset = res[this.options.horizontal ? 'scrollLeft' : 'scrollTop']
     this.scrolling = true
     this.resetScolling({ clearTimeout, setTimeout } as any)

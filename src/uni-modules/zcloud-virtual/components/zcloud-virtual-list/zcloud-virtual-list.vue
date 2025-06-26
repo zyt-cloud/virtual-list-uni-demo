@@ -1,10 +1,10 @@
 <script setup lang="ts" name="VirtualList">
 import type { VirtualizerInstance } from '../../typings'
 import { computed, onMounted, unref, type CSSProperties } from 'vue'
-import { getRectSizeAsync, virtualizerUUID } from '../../utils'
+import { getRectSizeAsync, getWindowRect, virtualizerUUID, type Rect } from '../../utils'
 import { useVirualizer } from '../../hooks/use-virtualizer'
 import ZcloudResizable from '@/uni-modules/zcloud-resizable/components/zcloud-resizable/zcloud-resizable.vue'
-// import { onPageScroll } from '@dcloudio/uni-app'
+import { onPageScroll } from '@dcloudio/uni-app'
 
 // 引用外部type报错 只能内部重新声明一遍
 export interface IVirtualListProps {
@@ -127,25 +127,44 @@ const onScroll = (e: any) => {
   gridColVirtualizerRef.value?.onScroll(e.detail)
 }
 
+// 监听页面滚动 子组件直接监听无效
+// onPageScroll((e) => {
+//   if (props.followPageScroll) {
+//     virtualizerRef.value?.onScroll(e)
+//   }
+// })
+
+function init(rect: Rect) {
+  virtualizerRef.value!.setScrollElementRect(rect)
+  virtualizerRef.value!.init()
+
+  if (props.grid) {
+    gridColVirtualizerRef.value!.setScrollElementRect(rect)
+    gridColVirtualizerRef.value!.init()
+  }
+
+  if (props.followPageScroll) {
+    virtualizerRef.value!.options.scrollMargin = rect.top ?? 0
+    gridColVirtualizerRef.value && (gridColVirtualizerRef.value.options.scrollMargin = rect.top ?? 0)
+  }
+
+  emit('ready', virtualizerRef.value!, gridColVirtualizerRef.value)
+}
+
 onMounted(() => {
   if (virtualizerRef.value) {
+    if (props.followPageScroll) {
+      const rect = getWindowRect()
+      init(rect)
+      return
+    }
+
     getRectSizeAsync(scrollId).then((rect) => {
-      virtualizerRef.value!.setScrollElementRect(rect)
-      virtualizerRef.value!.init()
-
-      // onPageScroll(({ scrollTop }) => {
-      //   virtualizerRef.value!.scrollTo(scrollTop)
-      // })
-
-      if (props.grid) {
-        gridColVirtualizerRef.value!.setScrollElementRect(rect)
-        gridColVirtualizerRef.value!.init()
-      }
-
-      emit('ready', virtualizerRef.value!, gridColVirtualizerRef.value)
+      init(rect)
     })
   }
 })
+
 // 问题记录
 // 1，循环slot报警告 More than one slot named "" are found inside a single component instance
 // 2，slot自动添加一个view标签导致样式异常
@@ -196,6 +215,7 @@ onMounted(() => {
         <ZcloudResizable
           v-if="dynamicSize"
           :styles="{ width: '100%' }"
+          emit-when-mounted
           @resize="(res) => virtualizerRef?.onElementSizeChange(item.index, { height: res.height, width: res.width })"
         >
           <!-- shit 不支持 v-bind 为了和 web 端的包保持一致，逐一展开 -->
