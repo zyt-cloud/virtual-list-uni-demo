@@ -26,7 +26,7 @@ const onReady = (virtualizer: VirtualizerInstance) => {
       itemClassName="demo-list-item"
       :height="600"
       :count="10000"
-      :size="60"
+      :size="110"
       :overscan="6"
       dynamic-size
       :gap="10"
