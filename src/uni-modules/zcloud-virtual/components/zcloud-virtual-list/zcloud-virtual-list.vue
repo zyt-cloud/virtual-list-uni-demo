@@ -4,7 +4,6 @@ import { computed, onMounted, unref, type CSSProperties } from 'vue'
 import { getRectSizeAsync, getWindowRect, virtualizerUUID, type Rect } from '../../utils'
 import { useVirualizer } from '../../hooks/use-virtualizer'
 import ZcloudResizable from '@/uni-modules/zcloud-resizable/components/zcloud-resizable/zcloud-resizable.vue'
-import { onPageScroll } from '@dcloudio/uni-app'
 
 // 引用外部type报错 只能内部重新声明一遍
 export interface IVirtualListProps {
