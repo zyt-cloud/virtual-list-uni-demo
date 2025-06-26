@@ -2,24 +2,32 @@
 import ZcloudResizable, {
   type ResizeResult,
 } from '@/uni-modules/zcloud-resizable/components/zcloud-resizable/zcloud-resizable.vue'
-import { ref } from 'vue'
+import { h, ref } from 'vue'
 
-const size = ref(100)
+const generateText = () => {
+  return Array(Math.ceil(Math.random() * 20))
+    .fill('我是动态内容')
+    .join(',')
+}
+
+const text = ref(generateText())
+
+const rect = ref({ width: 0, height: 0 })
 const onResize = (e: ResizeResult) => {
   console.log('resize', e)
+  rect.value = { width: e.width, height: e.height }
 }
 </script>
 
 <template>
   <view class="content">
-    <button @click="size = size === 100 ? 50 : 100">点击放大缩小</button>
+    <button @click="text = generateText()" style="margin-bottom: 16px">点击测试动态内容</button>
 
     <ZcloudResizable @resize="onResize" emit-when-mounted>
-      <view
-        class="resize"
-        :style="{ borderRadius: '4px', border: '4px solid red', width: `${size}px`, height: `${size}px` }"
-      >
-        <text>hello world</text>
+      <view class="resize" style="border-radius: 4px; border: 4px solid red">
+        <view>w: {{ rect.width }}</view>
+        <view>h: {{ rect.height }}</view>
+        <view>动态内容：{{ text }}</view>
       </view>
     </ZcloudResizable>
     <view style="margin: 24px 0">虚拟列表demos</view>
@@ -49,6 +57,7 @@ const onResize = (e: ResizeResult) => {
 
 <style>
 .resize {
+  /* font-size: 12px; */
   background-color: #999;
 }
 
