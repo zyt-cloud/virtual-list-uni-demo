@@ -145,7 +145,6 @@ function init(rect: Rect) {
 
   if (props.followPageScroll) {
     virtualizerRef.value!.options.scrollMargin = rect.top ?? 0
-    gridColVirtualizerRef.value && (gridColVirtualizerRef.value.options.scrollMargin = rect.top ?? 0)
   }
 
   emit('ready', virtualizerRef.value!, gridColVirtualizerRef.value)
@@ -209,7 +208,9 @@ onMounted(() => {
           gridArea: `lane${item.lane}`,
           height: horizontal || dynamicSize ? void 0 : `${item.size}px`,
           width: !horizontal || dynamicSize ? void 0 : `${item.size}px`,
-          transform: horizontal ? `translateX(${item.start}px)` : `translateY(${item.start - 0}px)`,
+          transform: horizontal
+            ? `translateX(${item.start}px)`
+            : `translateY(${item.start - (virtualizerRef?.options.scrollMargin ?? 0)}px)`,
         }"
       >
         <ZcloudResizable

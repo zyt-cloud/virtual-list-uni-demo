@@ -7,6 +7,8 @@ import { onPageScroll } from '@dcloudio/uni-app'
 
 const instanceRef = ref<VirtualizerInstance>()
 
+const randomSizes = new Array(10000).fill(true).map(() => randomSize() + 80)
+
 onPageScroll((e) => {
   instanceRef.value?.onScroll(e)
 })
@@ -30,7 +32,7 @@ const onReady = (virtualizer: VirtualizerInstance) => {
       itemClassName="demo-list-item"
       :count="10000"
       follow-page-scroll
-      :size="() => randomSize() + 30"
+      :size="(index) => randomSizes[index]"
       :overscan="6"
       :gap="10"
       :lanes="2"
