@@ -1,4 +1,4 @@
-# uni-app 虚拟组件 zclou-virtual-list
+# uni-app 虚拟组件 zcloud-virtual-list
 
 该组件包含常规虚拟列表、瀑布流、网格 grid
 

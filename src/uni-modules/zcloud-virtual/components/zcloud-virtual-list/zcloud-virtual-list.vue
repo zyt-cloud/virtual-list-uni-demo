@@ -1,7 +1,7 @@
 <script setup lang="ts" name="VirtualList">
 import type { VirtualizerInstance } from '../../typings'
 import { computed, getCurrentInstance, onMounted, unref, type CSSProperties } from 'vue'
-import { getRectSizeAsync, getScrollViewContextNode, getWindowRect, virtualizerUUID, type Rect } from '../../utils'
+import { getRectSizeAsync, getScrollViewContextNode, getWindowRect, virtualizerUUID } from '../../utils'
 import { useVirualizer } from '../../hooks/use-virtualizer'
 import ZcloudResizable from '@/uni-modules/zcloud-resizable/components/zcloud-resizable/zcloud-resizable.vue'
 import { useVirtualizerStyle } from '../../hooks/use-virtualizer-style'

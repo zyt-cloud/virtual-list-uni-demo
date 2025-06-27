@@ -1,6 +1,6 @@
-import { MiniVirtualizer, type VirtualizerOptions } from '@/components/mini'
+import { MiniVirtualizer, type VirtualizerOptions } from '@z-cloud/virtual-mini'
 import type { VirtualListProps, VirtualizerInstance } from '../typings'
-import { unref, shallowRef, onScopeDispose, watch, type Ref, type MaybeRef, triggerRef } from 'vue'
+import { unref, shallowRef, onScopeDispose, watch, type MaybeRef, triggerRef } from 'vue'
 
 export function useVirualizer(props: MaybeRef<VirtualListProps>) {
   const virtualizerRef = shallowRef<VirtualizerInstance>()

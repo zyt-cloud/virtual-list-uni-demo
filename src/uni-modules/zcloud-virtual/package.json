@@ -44,6 +44,10 @@
     },
     "npmurl": ""
   },
+  "dependencies": {
+    "@z-cloud/virtual-mini": "^1.0.1",
+    "@z-cloud/resizable-uni": "^1.0.2"
+  },
   "uni_modules": {
     "dependencies": [],
     "encrypt": [],

@@ -56,6 +56,12 @@ importers:
       '@dcloudio/uni-quickapp-webview':
         specifier: 3.0.0-4060620250520001
         version: 3.0.0-4060620250520001(postcss@8.5.6)(rollup@4.44.0)(vue@3.5.17(typescript@4.9.5))
+      '@z-cloud/resizable-uni':
+        specifier: ^1.0.2
+        version: 1.0.2(vue@3.5.17(typescript@4.9.5))
+      '@z-cloud/virtual-mini':
+        specifier: 1.0.1
+        version: 1.0.1
       vue:
         specifier: ^3.4.21
         version: 3.5.17(typescript@4.9.5)
@@ -1524,6 +1530,18 @@ packages:
     peerDependenciesMeta:
       '@types/node':
         optional: true
+
+  '@z-cloud/resizable-uni@1.0.2':
+    resolution: {integrity: sha512-SGiQT7laymPip0elKmW9v/wIRxIclrTVtCIUV9djvTnjuuSBtcePgziiao/jLmwW3nS1B/Iwq4Yyzf4mjBzTlg==}
+    engines: {HBuilderX: ^3.8.7}
+    peerDependencies:
+      vue: '>=3.2.47'
+
+  '@z-cloud/virtual-mini@1.0.1':
+    resolution: {integrity: sha512-BRAGkLdKAeYPg9NlNNm2FC3Nk7GhL8qteAyUIvLFA1nF/HRj4zEW/LpCBZCU9wXwLiHakkoW8Qz+FR8qw/XuFQ==}
+
+  '@z-cloud/virtual-vanilla@1.0.0':
+    resolution: {integrity: sha512-5yaTKDzHP+j8j+a74E2iA520T18E8apz7DyavuCzPWaQDD6biu99ur1QX3Q4B8TGJQTi87/wcSPra93aN8cn0g==}
 
   abab@2.0.6:
     resolution: {integrity: sha512-j2afSsaIENvHZN2B8GOpF566vZ5WVk5opAiMTvWgaQT8DkbOqsTfvNAvHoRGU2zzP8cPoqys+xHTRDWW8L+/BA==}
@@ -5772,6 +5790,16 @@ snapshots:
   '@vue/tsconfig@0.1.3(@types/node@24.0.3)':
     optionalDependencies:
       '@types/node': 24.0.3
+
+  '@z-cloud/resizable-uni@1.0.2(vue@3.5.17(typescript@4.9.5))':
+    dependencies:
+      vue: 3.5.17(typescript@4.9.5)
+
+  '@z-cloud/virtual-mini@1.0.1':
+    dependencies:
+      '@z-cloud/virtual-vanilla': 1.0.0
+
+  '@z-cloud/virtual-vanilla@1.0.0': {}
 
   abab@2.0.6: {}
 

@@ -1,4 +1,4 @@
-import type { MiniVirtualizer, VirtualizerOptions } from '@/components/mini'
+import type { MiniVirtualizer, VirtualizerOptions } from '@z-cloud/virtual-mini'
 import type { CSSProperties } from 'vue'
 
 export type VirtualizerInstance = MiniVirtualizer
