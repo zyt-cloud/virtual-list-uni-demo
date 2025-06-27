@@ -1,7 +1,5 @@
 # uni-app 虚拟组件 zcloud-virtual-list
 
-## uni-app virtual-list 组件演示 demo
-
 > 还提供其他平台包: web: @z-cloud/virtual-react，@z-cloud/virtual-vue。 Taro: @z-cloud/virtual-taro。文档建设中...
 
 该组件包含常规虚拟列表、瀑布流、网格 grid
