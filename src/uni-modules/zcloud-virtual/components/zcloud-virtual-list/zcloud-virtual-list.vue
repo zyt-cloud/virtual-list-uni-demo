@@ -8,12 +8,19 @@ import { useVirtualizerStyle } from '../../hooks/use-virtualizer-style'
 
 // 引用外部type报错 只能内部重新声明一遍
 export interface IVirtualListProps {
-  className?: string
-  styles?: CSSProperties
-  width?: number | string
-  height?: number | string
-  itemClassName?: string
-  itemStyle?: CSSProperties
+  /**
+   * 列表项数量
+   */
+  count: number
+  /**
+   * 每一项的大小，竖向滚动为高度，横向滚动为宽度
+   */
+  size: number | ((index: number) => number)
+  /**
+   * 可见范围外两端渲染数量，该值越大出现白屏的概率越小。建议跟随页面滚动的虚拟列表该值可稍微配置大一些。
+   * @default 1
+   */
+  overscan?: number
   /**
    * 动态尺寸 grid 模式暂不支持
    */
@@ -28,19 +35,6 @@ export interface IVirtualListProps {
   grid?: boolean
   // 是否跟随页面滚动， 此时不需要设置虚拟列表高度
   followPageScroll?: boolean
-  /**
-   * 列表项数量
-   */
-  count: number
-  /**
-   * 每一项的大小，竖向滚动为高度，横向滚动为宽度
-   */
-  size: number | ((index: number) => number)
-  /**
-   * 可见范围外两端渲染数量，该值越大出现白屏的概率越小。建议跟随页面滚动的虚拟列表该值可稍微配置大一些。
-   * @default 1
-   */
-  overscan?: number
   /**
    * 水平滚动
    * @default false
@@ -72,6 +66,12 @@ export interface IVirtualListProps {
    * @default 1
    */
   lanes?: number
+  className?: string
+  styles?: CSSProperties
+  width?: number | string
+  height?: number | string
+  itemClassName?: string
+  itemStyle?: CSSProperties
 }
 
 const props = defineProps<IVirtualListProps>()

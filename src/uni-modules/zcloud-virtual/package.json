@@ -18,6 +18,7 @@
   "files": [
     "components",
     "utils",
+    "hooks",
     "README.md",
     "typings.ts"
   ],
