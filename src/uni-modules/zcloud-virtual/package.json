@@ -18,7 +18,8 @@
   "files": [
     "components",
     "utils",
-    "README.md"
+    "README.md",
+    "typings.ts"
   ],
   "engines": {
     "HBuilderX": "^3.8.7"
