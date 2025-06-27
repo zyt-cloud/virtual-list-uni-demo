@@ -47,12 +47,12 @@ export function getRectSizeAsync(id: string, retryMs = 500, retryTimes = 3) {
   })
 }
 
-export async function getScrollViewContextNode(id: string) {
-  const query = uni.createSelectorQuery()
+export async function getScrollViewContextNode(id: string, scope?: any) {
+  const query = uni.createSelectorQuery().in(scope)
   return new Promise((resolve) =>
     query
       .select(`#${id}`)
-      .node(({ node }) => resolve(node))
+      .node((res) => resolve(res?.node))
       .exec()
   )
 }

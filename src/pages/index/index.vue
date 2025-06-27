@@ -30,7 +30,7 @@ const onResize = (e: ResizeResult) => {
         <view>动态内容：{{ text }}</view>
       </view>
     </ZcloudResizable>
-    <view style="margin: 24px 0">虚拟列表demos</view>
+    <view style="margin: 24px 0">虚拟列表懒人版 demos</view>
     <view class="demo-btns">
       <navigator url="/pages/vertical/index" open-type="navigate">
         <button>垂直列表</button>
@@ -43,13 +43,26 @@ const onResize = (e: ResizeResult) => {
       </navigator>
 
       <navigator url="/pages/dynamic/index" open-type="navigate">
-        <button>动态尺寸 + 瀑布流</button>
+        <button>动态尺寸+瀑布流</button>
       </navigator>
       <navigator url="/pages/waterfall/index" open-type="navigate">
-        <button>瀑布流 + 跟随页面</button>
+        <button>瀑布流+跟随页面</button>
       </navigator>
       <navigator url="/pages/page/index" open-type="navigate">
         <button>跟随页面滚动</button>
+      </navigator>
+    </view>
+
+    <view style="margin: 24px 0">虚拟列表自助版 demos</view>
+    <view class="demo-btns">
+      <navigator url="/pages/grid/without-slot" open-type="navigate">
+        <button>高性能grid</button>
+      </navigator>
+      <navigator url="/pages/dynamic/without-slot" open-type="navigate">
+        <button>动态尺寸+瀑布流+跟随页面</button>
+      </navigator>
+      <navigator url="/pages/dynamic/element-scroll" open-type="navigate">
+        <button>动态尺寸+瀑布流+局部滚动</button>
       </navigator>
     </view>
   </view>

@@ -1,9 +1,10 @@
 <script setup lang="ts" name="VirtualList">
 import type { VirtualizerInstance } from '../../typings'
-import { computed, onMounted, unref, type CSSProperties } from 'vue'
-import { getRectSizeAsync, getWindowRect, virtualizerUUID, type Rect } from '../../utils'
+import { computed, getCurrentInstance, onMounted, unref, type CSSProperties } from 'vue'
+import { getRectSizeAsync, getScrollViewContextNode, getWindowRect, virtualizerUUID, type Rect } from '../../utils'
 import { useVirualizer } from '../../hooks/use-virtualizer'
 import ZcloudResizable from '@/uni-modules/zcloud-resizable/components/zcloud-resizable/zcloud-resizable.vue'
+import { useVirtualizerStyle } from '../../hooks/use-virtualizer-style'
 
 // 引用外部type报错 只能内部重新声明一遍
 export interface IVirtualListProps {
@@ -88,42 +89,29 @@ const virtualizerRef = useVirualizer(
     horizontal: props.grid ? false : props.horizontal,
   }))
 )
-const gridColVirtualizerRef = useVirualizer(
-  // grid 模式 单独设置列宽 水平滚动
-  computed(() => ({ ...unref(props), size: props.gridSize?.[0] ?? props.size, horizontal: true }))
-)
+// grid 模式才需要创建列虚拟器
+const gridColVirtualizerRef = !props.grid
+  ? void 0
+  : useVirualizer(
+      // grid 模式 单独设置列宽 水平滚动
+      computed(() => ({ ...unref(props), size: props.gridSize?.[0] ?? props.size, horizontal: true }))
+    )
 
 const virtualItems = computed(() => {
-  return [virtualizerRef.value?.getVirtualItems() ?? [], gridColVirtualizerRef.value?.getVirtualItems() ?? []]
+  return [virtualizerRef.value?.getVirtualItems() ?? [], gridColVirtualizerRef?.value?.getVirtualItems() ?? []]
 })
 
-const totalSize = computed(() => {
-  return [virtualizerRef.value?.getTotalSize() ?? 0, gridColVirtualizerRef.value?.getTotalSize() ?? 0]
+const totalSizes = computed(() => {
+  return [virtualizerRef.value?.getTotalSize() ?? 0, gridColVirtualizerRef?.value?.getTotalSize() ?? 0]
 })
 
-const gridTemplateAreas = computed(() => {
-  const gridAreas = Array.from({ length: props.lanes ?? 1 }, (_, index) =>
-    props.horizontal ? `"lane${index}"` : `lane${index}`
-  ).join(' ')
-
-  return props.horizontal ? gridAreas : `"${gridAreas}"`
-})
-
-const scrollViewStyle = computed(() => {
-  return {
-    width: props.width ? `${Number.isNaN(+props.width) ? props.width : props.width + 'px'}` : '100%',
-    height: props.height ? `${Number.isNaN(+props.height) ? props.height : props.height + 'px'}` : 'auto',
-    ...props.styles,
-  }
-})
+const { scrollElementStyle, contentStyle } = useVirtualizerStyle(props)
 
 const scrollId = `zcoud-virtual-list-${virtualizerUUID.value++}`
 
-virtualizerUUID.value++
-
 const onScroll = (e: any) => {
   virtualizerRef.value?.onScroll(e.detail)
-  gridColVirtualizerRef.value?.onScroll(e.detail)
+  gridColVirtualizerRef?.value?.onScroll(e.detail)
 }
 
 // 监听页面滚动 子组件直接监听无效
@@ -133,33 +121,51 @@ const onScroll = (e: any) => {
 //   }
 // })
 
-function init(rect: Rect) {
-  virtualizerRef.value!.setScrollElementRect(rect)
-  virtualizerRef.value!.init()
+const instance = getCurrentInstance()
+async function init() {
+  const windowRect = getWindowRect()
+  const elementRect = await getRectSizeAsync(scrollId)
+  const scrollNode: any = await getScrollViewContextNode(scrollId, instance?.proxy)
 
-  if (props.grid) {
-    gridColVirtualizerRef.value!.setScrollElementRect(rect)
-    gridColVirtualizerRef.value!.init()
+  virtualizerRef.value!.setScrollElementRect(props.followPageScroll ? windowRect : elementRect)
+
+  virtualizerRef.value!.scrollTo = (offset, behavior) => {
+    if (!scrollNode) {
+      console.warn('获取scrollNode失败')
+      return
+    }
+
+    scrollNode.scrollTo({
+      [props.horizontal ? 'left' : 'top']: offset,
+      animated: props.dynamicSize ? false : behavior === 'smooth',
+    })
   }
 
   if (props.followPageScroll) {
-    virtualizerRef.value!.options.scrollMargin = rect.top ?? 0
+    virtualizerRef.value!.options.scrollMargin = elementRect.top ?? 0
+    virtualizerRef.value!.scrollTo = (offset, behavior) => {
+      uni.pageScrollTo({
+        scrollTop: offset,
+        // 动态尺寸不支持滚动动画
+        duration: behavior === 'smooth' && !props.dynamicSize ? 300 : 0,
+      })
+    }
   }
 
-  emit('ready', virtualizerRef.value!, gridColVirtualizerRef.value)
+  virtualizerRef.value!.init()
+
+  if (props.grid && gridColVirtualizerRef?.value) {
+    gridColVirtualizerRef.value.setScrollElementRect(elementRect)
+    gridColVirtualizerRef.value.scrollTo = virtualizerRef.value!.scrollTo ?? (() => {})
+    gridColVirtualizerRef.value.init()
+  }
+
+  emit('ready', virtualizerRef.value!, gridColVirtualizerRef?.value)
 }
 
 onMounted(() => {
   if (virtualizerRef.value) {
-    if (props.followPageScroll) {
-      const rect = getWindowRect()
-      init(rect)
-      return
-    }
-
-    getRectSizeAsync(scrollId).then((rect) => {
-      init(rect)
-    })
+    init()
   }
 })
 
@@ -176,7 +182,7 @@ onMounted(() => {
   <scroll-view
     :id="scrollId"
     :class="className"
-    :style="scrollViewStyle"
+    :style="scrollElementStyle"
     :scroll-x="horizontal"
     :scroll-y="!horizontal"
     enhanced
@@ -184,18 +190,10 @@ onMounted(() => {
     @scroll="onScroll"
   >
     <view
-      :style="{
-        display: 'grid',
-        gridTemplateAreas,
-        gridTemplateColumns: `repeat(${horizontal ? 1 : lanes ?? 1}, 1fr)`,
-        gridTemplateRows: `repeat(${horizontal ? lanes ?? 1 : 1}, 1fr)`,
-        alignItems: dynamicSize && !horizontal ? 'start' : 'stretch',
-        justifyItems: dynamicSize && horizontal ? 'start' : 'stretch',
-        columnGap: horizontal ? 0 : `${gap ?? 0}px`,
-        rowGap: horizontal ? `${gap ?? 0}px` : 0,
-        height: horizontal ? '100%' : `${totalSize[0]}px`,
-        width: horizontal ? `${totalSize[0]}px` : '100%',
-      }"
+      :style="[
+        contentStyle,
+        { height: horizontal ? '100%' : `${totalSizes[0]}px`, width: horizontal ? `${totalSizes[0]}px` : '100%' },
+      ]"
     >
       <view
         v-for="item in virtualItems[0]"
@@ -249,14 +247,14 @@ onMounted(() => {
     scroll-x
     scroll-y
     ehanced
-    :style="scrollViewStyle"
+    :style="scrollElementStyle"
     @scroll="onScroll"
   >
     <view
       class="scroll-container"
       :style="{
-        height: `${totalSize[0]}px`,
-        width: `${totalSize[1]}px`,
+        height: `${totalSizes[0]}px`,
+        width: `${totalSizes[1]}px`,
       }"
     >
       <template v-if="grid" v-for="rowItem in virtualItems[0]">

@@ -2,7 +2,6 @@
 import ZcloudVirtualList from '@/uni-modules/zcloud-virtual/components/zcloud-virtual-list/zcloud-virtual-list.vue'
 import { type VirtualizerInstance } from '@/uni-modules/zcloud-virtual/typings'
 import { ref } from 'vue'
-import { randomColors, randomSize } from '../dynamic/utils'
 import { onPageScroll } from '@dcloudio/uni-app'
 
 const instanceRef = ref<VirtualizerInstance>()

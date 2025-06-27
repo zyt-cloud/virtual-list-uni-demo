@@ -1,10 +1,8 @@
 import { MiniVirtualizer, type VirtualizerOptions } from '@/components/mini'
 import type { VirtualListProps, VirtualizerInstance } from '../typings'
-import { unref, shallowRef, onScopeDispose, watch, type Ref, triggerRef } from 'vue'
+import { unref, shallowRef, onScopeDispose, watch, type Ref, type MaybeRef, triggerRef } from 'vue'
 
-type MayBeRef<T> = T | Ref<T>
-
-export function useVirualizer(props: MayBeRef<VirtualListProps>) {
+export function useVirualizer(props: MaybeRef<VirtualListProps>) {
   const virtualizerRef = shallowRef<VirtualizerInstance>()
 
   watch(
@@ -14,7 +12,7 @@ export function useVirualizer(props: MayBeRef<VirtualListProps>) {
 
       const options: VirtualizerOptions = {
         ...restOptions,
-        scrollMargin: scrollMargin ? 0 : 0,
+        scrollMargin: scrollMargin ?? 0,
         onChange: (scrolling) => {
           triggerRef(virtualizerRef)
           onChange?.(scrolling)

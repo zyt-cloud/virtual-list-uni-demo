@@ -27,6 +27,7 @@ const onReady = (virtualizer: VirtualizerInstance) => {
       :size="60"
       :overscan="6"
       :gap="10"
+      :lanes="1"
       className="demo-list"
       @ready="onReady"
     >
