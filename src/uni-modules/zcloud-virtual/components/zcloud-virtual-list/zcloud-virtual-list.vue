@@ -129,14 +129,14 @@ async function init() {
 
   virtualizerRef.value!.setScrollElementRect(props.followPageScroll ? windowRect : elementRect)
 
-  virtualizerRef.value!.scrollTo = (offset, behavior) => {
+  virtualizerRef.value!.scrollTo = function (offset, behavior) {
     if (!scrollNode) {
       console.warn('获取scrollNode失败')
       return
     }
 
     scrollNode.scrollTo({
-      [props.horizontal ? 'left' : 'top']: offset,
+      [this.options.horizontal ? 'left' : 'top']: offset,
       animated: props.dynamicSize ? false : behavior === 'smooth',
     })
   }
