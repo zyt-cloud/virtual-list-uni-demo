@@ -26,7 +26,11 @@ const instance = getCurrentInstance()
 let observer: UniApp.IntersectionObserver
 
 onMounted(() => {
-  const query = uni.createSelectorQuery().in(instance?.proxy).select(`#${resizeId}`).boundingClientRect()
+  const query = uni
+    .createSelectorQuery()
+    .in(instance?.proxy)
+    .select(`#${resizeId}`)
+    .boundingClientRect()
   query.exec((res) => {
     width.value = res[0].width
     height.value = res[0].height
@@ -36,7 +40,11 @@ onMounted(() => {
     }
   })
 
-  observer = uni.createIntersectionObserver(instance, { observeAll: true })
+  observer = uni.createIntersectionObserver(instance, {
+    observeAll: true,
+    // @ts-ignore
+    nativeMode: true,
+  })
   observer.relativeTo(`#${resizeId}`).observe(`.${resizeFlexClass}`, (res) => {
     // TODO 微信文档这里的res 包含 width 和 height，但uni-app类型提示没有，暂时这样计算width 和 height
     const currWidth = res.relativeRect.right - res.relativeRect.left
@@ -63,8 +71,16 @@ onUnmounted(() => {
       :class="resizeFlexClass"
       :style="{ left: `${width - 1}px`, top: `${height - 1}px` }"
     />
-    <view class="zcloud-resize-flex" :class="resizeFlexClass" :style="{ left: `${width - 1}px`, top: `${height}px` }" />
-    <view class="zcloud-resize-flex" :class="resizeFlexClass" :style="{ left: `${width}px`, top: `${height - 1}px` }" />
+    <view
+      class="zcloud-resize-flex"
+      :class="resizeFlexClass"
+      :style="{ left: `${width - 1}px`, top: `${height}px` }"
+    />
+    <view
+      class="zcloud-resize-flex"
+      :class="resizeFlexClass"
+      :style="{ left: `${width}px`, top: `${height - 1}px` }"
+    />
   </view>
 </template>
 

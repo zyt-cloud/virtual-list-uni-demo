@@ -1,7 +1,12 @@
 <script setup lang="ts" name="VirtualList">
 import type { VirtualizerInstance } from '../../typings'
 import { computed, getCurrentInstance, onMounted, unref, type CSSProperties } from 'vue'
-import { getRectSizeAsync, getScrollViewContextNode, getWindowRect, virtualizerUUID } from '../../utils'
+import {
+  getRectSizeAsync,
+  getScrollViewContextNode,
+  getWindowRect,
+  virtualizerUUID,
+} from '../../utils'
 import { useVirualizer } from '../../hooks/use-virtualizer'
 import ZcloudResizable from '@z-cloud/resizable-uni/components/zcloud-resizable/zcloud-resizable.vue'
 import { useVirtualizerStyle } from '../../hooks/use-virtualizer-style'
@@ -72,6 +77,7 @@ export interface IVirtualListProps {
   height?: number | string
   itemClassName?: string
   itemStyle?: CSSProperties
+  scrollViewProps?: Record<string, any>
 }
 
 const props = defineProps<IVirtualListProps>()
@@ -94,15 +100,25 @@ const gridColVirtualizerRef = !props.grid
   ? void 0
   : useVirualizer(
       // grid 模式 单独设置列宽 水平滚动
-      computed(() => ({ ...unref(props), size: props.gridSize?.[0] ?? props.size, horizontal: true }))
+      computed(() => ({
+        ...unref(props),
+        size: props.gridSize?.[0] ?? props.size,
+        horizontal: true,
+      }))
     )
 
 const virtualItems = computed(() => {
-  return [virtualizerRef.value?.getVirtualItems() ?? [], gridColVirtualizerRef?.value?.getVirtualItems() ?? []]
+  return [
+    virtualizerRef.value?.getVirtualItems() ?? [],
+    gridColVirtualizerRef?.value?.getVirtualItems() ?? [],
+  ]
 })
 
 const totalSizes = computed(() => {
-  return [virtualizerRef.value?.getTotalSize() ?? 0, gridColVirtualizerRef?.value?.getTotalSize() ?? 0]
+  return [
+    virtualizerRef.value?.getTotalSize() ?? 0,
+    gridColVirtualizerRef?.value?.getTotalSize() ?? 0,
+  ]
 })
 
 const { scrollElementStyle, contentStyle } = useVirtualizerStyle(props)
@@ -112,6 +128,7 @@ const scrollId = `zcoud-virtual-list-${virtualizerUUID.value++}`
 const onScroll = (e: any) => {
   virtualizerRef.value?.onScroll(e.detail)
   gridColVirtualizerRef?.value?.onScroll(e.detail)
+  props.scrollViewProps?.onScroll?.(e)
 }
 
 // 监听页面滚动 子组件直接监听无效
@@ -192,7 +209,10 @@ onMounted(() => {
     <view
       :style="[
         contentStyle,
-        { height: horizontal ? '100%' : `${totalSizes[0]}px`, width: horizontal ? `${totalSizes[0]}px` : '100%' },
+        {
+          height: horizontal ? '100%' : `${totalSizes[0]}px`,
+          width: horizontal ? `${totalSizes[0]}px` : '100%',
+        },
       ]"
     >
       <view
@@ -214,7 +234,13 @@ onMounted(() => {
           v-if="dynamicSize"
           :styles="{ width: '100%' }"
           emit-when-mounted
-          @resize="(res) => virtualizerRef?.onElementSizeChange(item.index, { height: res.height, width: res.width })"
+          @resize="
+            (res) =>
+              virtualizerRef?.onElementSizeChange(item.index, {
+                height: res.height,
+                width: res.width,
+              })
+          "
         >
           <!-- shit 不支持 v-bind 为了和 web 端的包保持一致，逐一展开 -->
           <slot
