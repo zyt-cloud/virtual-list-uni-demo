@@ -39,7 +39,8 @@ const onReady = (virtualizer: VirtualizerInstance) => {
             backgroundColor: randomColors[index % randomColors.length],
             height: `${dynamicSizes[index]}px`,
           }"
-        />
+          >item {{ index }}</view
+        >
       </template>
     </ZcloudVirtualList>
   </view>
