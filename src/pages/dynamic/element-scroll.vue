@@ -1,8 +1,9 @@
 <script setup lang="ts" name="VirtualList">
 import type { VirtualListProps } from '@/uni-modules/zcloud-virtual/typings'
-import { computed, onMounted, ref } from 'vue'
+import { computed, getCurrentInstance, onMounted, ref } from 'vue'
 import {
   getRectSizeAsync,
+  getScrollViewContextNode,
   getWindowRect,
   virtualizerUUID,
 } from '@/uni-modules/zcloud-virtual/utils'
@@ -39,9 +40,24 @@ const onScroll = (e: any) => {
   virtualizerRef.value?.onScroll(e.detail)
 }
 
+const instance = getCurrentInstance()
+
 async function init() {
   const windowRect = getWindowRect()
   const elementRect = await getRectSizeAsync(scrollId)
+  const scrollNode: any = await getScrollViewContextNode(scrollId, instance?.proxy)
+
+  virtualizerRef.value!.scrollTo = function (offset, behavior) {
+    if (!scrollNode) {
+      console.warn('获取scrollNode失败')
+      return
+    }
+
+    scrollNode.scrollTo({
+      [this.options.horizontal ? 'left' : 'top']: offset,
+      animated: false,
+    })
+  }
 
   virtualizerRef.value!.setScrollElementRect(windowRect)
   virtualizerRef.value!.options.scrollMargin = elementRect.top ?? 0
@@ -61,8 +77,14 @@ onMounted(() => {
     <view style="margin: 12px 0">
       这是无slot的虚拟列表，直接复制使用，slot在小程序中循环的话会有异常
     </view>
-    <scroll-view scroll-y enhanced @scroll="onScroll" style="height: 400px">
-      <view :id="scrollId" :style="[contentStyle, { height: `${totalSize}px`, width: '100%' }]">
+    <view class="demo-btns" style="grid-template-columns: repeat(2, 1fr)">
+      <button @click="virtualizerRef?.scrollToIndex(3000, { align: 'center' })">
+        scrollToIndex(3000) with align center
+      </button>
+      <button @click="virtualizerRef?.scrollToOffset(4000, 'instant')">scrollToOffset(4000)</button>
+    </view>
+    <scroll-view :id="scrollId" scroll-y enhanced @scroll="onScroll" style="height: 400px">
+      <view :style="[contentStyle, { height: `${totalSize}px`, width: '100%' }]">
         <view
           v-for="item in virtualItems"
           class="demo-list-item"
@@ -89,7 +111,8 @@ onMounted(() => {
                 backgroundColor: randomColors[item.index % randomColors.length],
                 height: `${dynamicSizes[item.index]}px`,
               }"
-            />
+              >item {{ item.index }}</view
+            >
           </ZcloudResizable>
         </view>
       </view>
