@@ -4,7 +4,6 @@ import { computed, getCurrentInstance, onMounted, ref } from 'vue'
 import {
   getRectSizeAsync,
   getScrollViewContextNode,
-  getWindowRect,
   virtualizerUUID,
 } from '@z-cloud/virtual-uni/utils'
 import { useVirualizer } from '@z-cloud/virtual-uni/hooks/use-virtualizer'
@@ -43,7 +42,6 @@ const onScroll = (e: any) => {
 const instance = getCurrentInstance()
 
 async function init() {
-  const windowRect = getWindowRect()
   const elementRect = await getRectSizeAsync(scrollId)
   const scrollNode: any = await getScrollViewContextNode(scrollId, instance?.proxy)
 
@@ -59,7 +57,7 @@ async function init() {
     })
   }
 
-  virtualizerRef.value!.setScrollElementRect(windowRect)
+  virtualizerRef.value!.setScrollElementRect(elementRect)
   virtualizerRef.value!.options.scrollMargin = elementRect.top ?? 0
   virtualizerRef.value!.init()
 }
