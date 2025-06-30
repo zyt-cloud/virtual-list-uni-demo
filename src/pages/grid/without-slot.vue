@@ -1,7 +1,7 @@
 <script setup lang="ts" name="VirtualList">
 import { computed, onMounted } from 'vue'
-import { getRectSizeAsync, virtualizerUUID, type Rect } from '@/uni-modules/zcloud-virtual/utils'
-import { useVirualizer } from '@/uni-modules/zcloud-virtual/hooks/use-virtualizer'
+import { getRectSizeAsync, virtualizerUUID, type Rect } from '@z-cloud/virtual-uni/utils'
+import { useVirualizer } from '@z-cloud/virtual-uni/hooks/use-virtualizer'
 
 // 如果需要动态改变 count 可以用ref
 const props = {
@@ -23,11 +23,17 @@ const gridColVirtualizerRef = useVirualizer({
 })
 
 const virtualItems = computed(() => {
-  return [virtualizerRef.value?.getVirtualItems() ?? [], gridColVirtualizerRef?.value?.getVirtualItems() ?? []]
+  return [
+    virtualizerRef.value?.getVirtualItems() ?? [],
+    gridColVirtualizerRef?.value?.getVirtualItems() ?? [],
+  ]
 })
 
 const totalSizes = computed(() => {
-  return [virtualizerRef.value?.getTotalSize() ?? 0, gridColVirtualizerRef?.value?.getTotalSize() ?? 0]
+  return [
+    virtualizerRef.value?.getTotalSize() ?? 0,
+    gridColVirtualizerRef?.value?.getTotalSize() ?? 0,
+  ]
 })
 
 const scrollId = `zcoud-virtual-list-${virtualizerUUID.value++}`
@@ -58,7 +64,9 @@ onMounted(() => {
 <template>
   <view style="padding: 14px">
     <view style="margin: 12px 0"> grid虚拟列表 </view>
-    <view style="margin: 12px 0"> 这是无slot的虚拟grid列表，直接复制使用，slot在小程序中循环的话会有异常 </view>
+    <view style="margin: 12px 0">
+      这是无slot的虚拟grid列表，直接复制使用，slot在小程序中循环的话会有异常
+    </view>
     <scroll-view :id="scrollId" style="height: 400px" scroll-x scroll-y ehanced @scroll="onScroll">
       <view
         class="scroll-container"

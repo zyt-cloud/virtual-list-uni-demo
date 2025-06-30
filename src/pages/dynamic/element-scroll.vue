@@ -1,15 +1,15 @@
 <script setup lang="ts" name="VirtualList">
-import type { VirtualListProps } from '@/uni-modules/zcloud-virtual/typings'
+import type { VirtualListProps } from '@z-cloud/virtual-uni/typings'
 import { computed, getCurrentInstance, onMounted, ref } from 'vue'
 import {
   getRectSizeAsync,
   getScrollViewContextNode,
   getWindowRect,
   virtualizerUUID,
-} from '@/uni-modules/zcloud-virtual/utils'
-import { useVirualizer } from '@/uni-modules/zcloud-virtual/hooks/use-virtualizer'
+} from '@z-cloud/virtual-uni/utils'
+import { useVirualizer } from '@z-cloud/virtual-uni/hooks/use-virtualizer'
 import ZcloudResizable from '@/uni-modules/zcloud-resizable/components/zcloud-resizable/zcloud-resizable.vue'
-import { useVirtualizerStyle } from '@/uni-modules/zcloud-virtual/hooks/use-virtualizer-style'
+import { useVirtualizerStyle } from '@z-cloud/virtual-uni/hooks/use-virtualizer-style'
 import { randomColors, randomSize } from './utils'
 
 const dynamicSizes = new Array(10000).fill(true).map(() => randomSize() + 80)

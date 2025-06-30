@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ZcloudVirtualList from '@/uni-modules/zcloud-virtual/components/zcloud-virtual-list/zcloud-virtual-list.vue'
-import { type VirtualizerInstance } from '@/uni-modules/zcloud-virtual/typings'
+import ZcloudVirtualList from '@z-cloud/virtual-uni/components/zcloud-virtual-list/zcloud-virtual-list.vue'
+import { type VirtualizerInstance } from '@z-cloud/virtual-uni/typings'
 import { ref } from 'vue'
 
 const instanceRef = ref<VirtualizerInstance>()
@@ -14,11 +14,15 @@ const onReady = (virtualizer: VirtualizerInstance) => {
 <template>
   <view style="padding: 10px 12px">
     <view class="demo-btns">
-      <button @click="instanceRef?.scrollToIndex(2000, { behavior: 'smooth' })">scrollToIndex(2000) with smooth</button>
+      <button @click="instanceRef?.scrollToIndex(2000, { behavior: 'smooth' })">
+        scrollToIndex(2000) with smooth
+      </button>
       <button @click="instanceRef?.scrollToIndex(3000, { align: 'center' })">
         scrollToIndex(3000) with align center
       </button>
-      <button @click="instanceRef?.scrollToOffset(4000, 'smooth')">scrollToOffset(4000) with smooth</button>
+      <button @click="instanceRef?.scrollToOffset(4000, 'smooth')">
+        scrollToOffset(4000) with smooth
+      </button>
     </view>
     <ZcloudVirtualList
       itemClassName="demo-list-item"
@@ -32,7 +36,9 @@ const onReady = (virtualizer: VirtualizerInstance) => {
       @ready="onReady"
     >
       <template #default="{ index }">
-        <view :style="{ height: `${200}px` }" :class="index % 2 ? 'demo-list-odd' : 'demo-list-even'"
+        <view
+          :style="{ height: `${200}px` }"
+          :class="index % 2 ? 'demo-list-odd' : 'demo-list-even'"
           >item {{ index }}</view
         >
       </template>

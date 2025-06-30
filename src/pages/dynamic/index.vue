@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import ZcloudVirtualList from '@/uni-modules/zcloud-virtual/components/zcloud-virtual-list/zcloud-virtual-list.vue'
-import { type VirtualizerInstance } from '@/uni-modules/zcloud-virtual/typings'
+import ZcloudVirtualList from '@z-cloud/virtual-uni/components/zcloud-virtual-list/zcloud-virtual-list.vue'
+import { type VirtualizerInstance } from '@z-cloud/virtual-uni/typings'
 import { ref } from 'vue'
 import { randomColors, randomSize } from './utils'
 
