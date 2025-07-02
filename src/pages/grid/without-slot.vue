@@ -67,7 +67,7 @@ onMounted(() => {
     <view style="margin: 12px 0">
       这是无slot的虚拟grid列表，直接复制使用，slot在小程序中循环的话会有异常
     </view>
-    <scroll-view :id="scrollId" style="height: 400px" scroll-x scroll-y ehanced @scroll="onScroll">
+    <scroll-view :id="scrollId" style="height: 400px" scroll-x scroll-y enhanced @scroll="onScroll">
       <view
         class="scroll-container"
         :style="{
