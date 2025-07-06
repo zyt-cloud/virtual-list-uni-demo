@@ -7,7 +7,7 @@ import {
   virtualizerUUID,
 } from '@z-cloud/virtual-uni/utils'
 import { useVirualizer } from '@z-cloud/virtual-uni/hooks/use-virtualizer'
-import ZcloudResizable from '@/uni-modules/zcloud-resizable/components/zcloud-resizable/zcloud-resizable.vue'
+import ZcloudResizable from '@z-cloud/resizable-uni/components/zcloud-resizable/zcloud-resizable.vue'
 import { useVirtualizerStyle } from '@z-cloud/virtual-uni/hooks/use-virtualizer-style'
 import { randomColors, randomSize } from './utils'
 
