@@ -2,7 +2,7 @@
   "id": "zcloud-resizable",
   "name": "@z-cloud/resizable-uni",
   "displayName": "resizable-uni 监测元素尺寸变化的组件",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "license": "MIT",
   "description": "一个基于Vue3 + TS开发的uni-app组件，用于监测元素尺寸变化的组件。",
   "keywords": [

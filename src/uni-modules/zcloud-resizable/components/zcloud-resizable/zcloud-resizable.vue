@@ -31,6 +31,7 @@ onMounted(() => {
     .in(instance?.proxy)
     .select(`#${resizeId}`)
     .boundingClientRect()
+
   query.exec((res) => {
     width.value = res[0].width
     height.value = res[0].height
@@ -40,15 +41,11 @@ onMounted(() => {
     }
   })
 
-  observer = uni.createIntersectionObserver(instance, {
-    observeAll: true,
-    // @ts-ignore
-    nativeMode: true,
-  })
+  observer = uni.createIntersectionObserver(instance, { observeAll: true })
   observer.relativeTo(`#${resizeId}`).observe(`.${resizeFlexClass}`, (res) => {
     // TODO 微信文档这里的res 包含 width 和 height，但uni-app类型提示没有，暂时这样计算width 和 height
-    const currWidth = res.relativeRect.right - res.relativeRect.left
-    const currHeight = res.relativeRect.bottom - res.relativeRect.top
+    const currWidth = Math.ceil(res.relativeRect.right - res.relativeRect.left)
+    const currHeight = Math.ceil(res.relativeRect.bottom - res.relativeRect.top)
 
     if (currWidth !== width.value || currHeight !== height.value) {
       width.value = currWidth
@@ -64,12 +61,12 @@ onUnmounted(() => {
 </script>
 
 <template>
-  <view :id="resizeId" :class="`zcloud-resize-wrap ${className ?? ''}`" :style="styles">
+  <view :id="resizeId" :class="['zcloud-resize-wrap', className]" :style="styles">
     <slot></slot>
     <view
       class="zcloud-resize-flex"
       :class="resizeFlexClass"
-      :style="{ left: `${width - 1}px`, top: `${height - 1}px` }"
+      :style="{ left: `${width - 2}px`, top: `${height - 2}px` }"
     />
     <view
       class="zcloud-resize-flex"
