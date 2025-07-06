@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import ZcloudResizable, {
   type ResizeResult,
-} from '@/uni-modules/zcloud-resizable/components/zcloud-resizable/zcloud-resizable.vue'
+} from '@z-cloud/resizable-uni/components/zcloud-resizable/zcloud-resizable.vue'
 import { h, ref } from 'vue'
 
 const generateText = () => {
